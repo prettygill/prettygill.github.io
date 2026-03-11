@@ -1,0 +1,1330 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>CASE 10-37T | The Inside Job</title>
+<link href="https://fonts.googleapis.com/css2?family=Special+Elite&family=Courier+Prime:ital,wght@0,400;0,700;1,400&family=Oswald:wght@300;400;600&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --ink: #0c0904;
+    --paper: #cfc09a;
+    --aged: #b8a070;
+    --red: #5e0a0a;
+    --red2: #7a1212;
+    --dark-bg: #060401;
+    --border: #5a3e10;
+    --muted: #3e2c0e;
+    --typewriter: 'Courier Prime', monospace;
+    --display: 'Special Elite', cursive;
+    --sans: 'Oswald', sans-serif;
+  }
+
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+
+  body {
+    background: var(--dark-bg);
+    background-image: radial-gradient(ellipse at 25% 15%, #140a02 0%, #060401 75%);
+    font-family: var(--typewriter);
+    color: var(--ink);
+    min-height: 100vh;
+  }
+
+  /* COVER */
+  #cover {
+    position: relative;
+    min-height: 100vh;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    padding: 40px 20px;
+    overflow: hidden;
+  }
+
+  .rain-container {
+    position: absolute;
+    inset: 0;
+    overflow: hidden;
+    pointer-events: none;
+    opacity: 0.16;
+  }
+
+  .raindrop {
+    position: absolute;
+    width: 1px;
+    background: linear-gradient(to bottom, transparent, #b89040);
+    animation: fall linear infinite;
+    top: -120px;
+  }
+
+  @keyframes fall { to { transform: translateY(115vh); } }
+
+  .cover-folder {
+    position: relative;
+    background: #b8985c;
+    background-image: linear-gradient(155deg, rgba(255,255,255,0.05) 0%, transparent 55%);
+    border: 3px solid var(--border);
+    border-radius: 2px;
+    max-width: 680px;
+    width: 100%;
+    padding: 54px 58px 50px;
+    box-shadow: 10px 10px 0px #3a2004, 22px 22px 70px rgba(0,0,0,0.92);
+    animation: coverIn 1.5s ease both;
+  }
+
+  @keyframes coverIn {
+    from { opacity: 0; transform: translateY(30px) rotate(-0.6deg); }
+    to   { opacity: 1; transform: translateY(0) rotate(0deg); }
+  }
+
+  .cover-tab {
+    position: absolute;
+    top: -27px; left: 44px;
+    background: #a88040;
+    border: 3px solid var(--border);
+    border-bottom: none;
+    padding: 5px 22px;
+    font-family: var(--sans);
+    font-size: 11px;
+    letter-spacing: 3px;
+    text-transform: uppercase;
+    color: #1c1004;
+    border-radius: 2px 2px 0 0;
+  }
+
+  .case-num {
+    font-family: var(--sans);
+    font-size: 10px;
+    letter-spacing: 4px;
+    text-transform: uppercase;
+    color: var(--muted);
+    margin-bottom: 10px;
+  }
+
+  .cover-title {
+    font-family: var(--display);
+    font-size: clamp(30px, 6vw, 50px);
+    line-height: 1.1;
+    color: var(--ink);
+    margin-bottom: 5px;
+  }
+
+  .cover-sub {
+    font-family: var(--typewriter);
+    font-style: italic;
+    font-size: 13px;
+    color: #4a3008;
+    margin-bottom: 16px;
+  }
+
+  .stamp {
+    display: inline-block;
+    border: 3px solid var(--red);
+    color: var(--red);
+    font-family: var(--sans);
+    font-weight: 600;
+    font-size: 20px;
+    letter-spacing: 5px;
+    padding: 4px 14px;
+    transform: rotate(-7deg);
+    opacity: 0.88;
+    text-transform: uppercase;
+    margin-bottom: 18px;
+  }
+
+  .cover-rule {
+    border: none;
+    border-top: 1px solid var(--border);
+    margin: 16px 0;
+    opacity: 0.5;
+  }
+
+  .cover-meta {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 10px;
+    font-size: 12px;
+    color: #3e2c0e;
+    margin-bottom: 18px;
+  }
+
+  .meta-label {
+    font-family: var(--sans);
+    font-size: 9px;
+    letter-spacing: 2px;
+    text-transform: uppercase;
+    color: var(--muted);
+    display: block;
+    margin-bottom: 2px;
+  }
+
+  .cover-summary {
+    background: #e0cc98;
+    border-left: 4px solid var(--red);
+    padding: 14px 18px;
+    font-size: 13px;
+    line-height: 1.85;
+    margin-bottom: 22px;
+    color: #14100
+4;
+  }
+
+  .open-btn {
+    display: block;
+    width: 100%;
+    padding: 15px;
+    background: #0c0904;
+    color: var(--paper);
+    border: none;
+    font-family: var(--display);
+    font-size: 18px;
+    letter-spacing: 3px;
+    cursor: pointer;
+    transition: all 0.25s;
+  }
+
+  .open-btn:hover { background: var(--red); transform: translateY(-2px); box-shadow: 0 8px 28px rgba(0,0,0,0.7); }
+
+  /* NAV */
+  #main-site { display: none; }
+
+  #case-nav {
+    position: sticky;
+    top: 0;
+    z-index: 100;
+    background: #040302;
+    border-bottom: 2px solid #2e1a06;
+    padding: 0 16px;
+    display: flex;
+    align-items: center;
+    overflow-x: auto;
+    scrollbar-width: none;
+  }
+
+  #case-nav::-webkit-scrollbar { display: none; }
+
+  .nav-brand {
+    font-family: var(--display);
+    color: #b08828;
+    font-size: 14px;
+    padding: 13px 18px 13px 0;
+    border-right: 1px solid #1e1204;
+    white-space: nowrap;
+    margin-right: 8px;
+    flex-shrink: 0;
+  }
+
+  .nav-btn {
+    background: none;
+    border: none;
+    color: #483808;
+    font-family: var(--typewriter);
+    font-size: 11px;
+    padding: 15px 12px;
+    cursor: pointer;
+    white-space: nowrap;
+    transition: color 0.2s;
+    flex-shrink: 0;
+  }
+
+  .nav-btn:hover { color: var(--paper); }
+  .nav-btn.active { color: var(--paper); border-bottom: 2px solid var(--red2); margin-bottom: -2px; }
+
+  /* CONTENT */
+  #content {
+    max-width: 840px;
+    margin: 0 auto;
+    padding: 40px 20px 80px;
+  }
+
+  .chapter { display: none; animation: pageIn 0.4s ease both; }
+  .chapter.active { display: block; }
+
+  @keyframes pageIn {
+    from { opacity: 0; transform: translateY(12px); }
+    to   { opacity: 1; transform: translateY(0); }
+  }
+
+  /* PAPER */
+  .doc-paper {
+    background: var(--paper);
+    background-image: repeating-linear-gradient(transparent, transparent 27px, rgba(80,55,10,0.18) 27px, rgba(80,55,10,0.18) 28px);
+    padding: 50px 56px;
+    position: relative;
+    box-shadow: 4px 4px 0 #3e2804, 14px 14px 50px rgba(0,0,0,0.82);
+    border: 1px solid #705018;
+    font-size: 14px;
+    line-height: 1.85;
+    color: #0c0904;
+  }
+
+  .doc-paper::before {
+    content: '';
+    position: absolute;
+    left: 82px; top: 0; bottom: 0;
+    width: 1px;
+    background: rgba(120,30,30,0.2);
+  }
+
+  @media (max-width: 600px) {
+    .doc-paper { padding: 28px 20px; }
+    .doc-paper::before { left: 26px; }
+  }
+
+  .ch-label {
+    font-family: var(--sans);
+    font-size: 10px;
+    letter-spacing: 4px;
+    text-transform: uppercase;
+    color: var(--red);
+    margin-bottom: 5px;
+  }
+
+  .ch-title {
+    font-family: var(--display);
+    font-size: clamp(24px, 4vw, 34px);
+    color: var(--ink);
+    line-height: 1.15;
+    margin-bottom: 4px;
+  }
+
+  .ch-sub {
+    font-family: var(--typewriter);
+    font-style: italic;
+    color: #4a3008;
+    font-size: 13px;
+    margin-bottom: 22px;
+    padding-bottom: 18px;
+    border-bottom: 1px solid rgba(80,55,10,0.3);
+  }
+
+  p { margin-bottom: 16px; }
+
+  blockquote {
+    border-left: 3px solid var(--red);
+    padding: 10px 18px;
+    margin: 20px 0;
+    background: rgba(70,15,15,0.07);
+    font-style: italic;
+    font-size: 14.5px;
+    color: #180804;
+  }
+
+  .course-box {
+    background: #d4e0f0;
+    border: 1px solid #5070a0;
+    border-left: 4px solid #20408a;
+    padding: 14px 18px;
+    margin: 22px 0;
+    font-size: 13px;
+    color: #080f1e;
+    line-height: 1.8;
+  }
+
+  .course-box::before {
+    content: 'Course Connection — HSCI 324';
+    display: block;
+    font-family: var(--sans);
+    font-size: 9px;
+    letter-spacing: 2px;
+    text-transform: uppercase;
+    color: #20408a;
+    margin-bottom: 6px;
+  }
+
+  .det-note {
+    background: #f5eecc;
+    border: 1px solid #b09800;
+    border-left: 4px solid #907800;
+    padding: 14px 18px;
+    margin: 20px 0;
+    font-style: italic;
+    font-size: 13px;
+    line-height: 1.8;
+    color: #14100a;
+  }
+
+  .det-note::before {
+    content: 'Detective Note';
+    display: block;
+    font-family: var(--sans);
+    font-size: 9px;
+    letter-spacing: 2px;
+    text-transform: uppercase;
+    color: #706000;
+    margin-bottom: 6px;
+    font-style: normal;
+  }
+
+  .sec-div {
+    text-align: center;
+    margin: 26px 0;
+    position: relative;
+  }
+
+  .sec-div::before {
+    content: '';
+    position: absolute;
+    left: 0; top: 50%;
+    width: 100%;
+    height: 1px;
+    background: linear-gradient(to right, transparent, #906818, transparent);
+  }
+
+  .sec-div span {
+    position: relative;
+    background: var(--paper);
+    padding: 0 14px;
+    font-family: var(--display);
+    font-size: 14px;
+    color: #5a3410;
+  }
+
+  /* WANTED */
+  .wanted {
+    background: #b89850;
+    border: 3px solid #6a4a10;
+    outline: 2px solid #907830;
+    outline-offset: 5px;
+    padding: 22px;
+    margin: 26px auto;
+    max-width: 360px;
+    text-align: center;
+    box-shadow: 5px 5px 0 #4a2c04, 14px 14px 35px rgba(0,0,0,0.65);
+  }
+
+  .wanted-top {
+    font-family: var(--display);
+    font-size: 30px;
+    letter-spacing: 7px;
+    color: var(--red);
+    text-shadow: 1px 1px 0 rgba(0,0,0,0.3);
+    margin-bottom: 3px;
+  }
+
+  .wanted-for {
+    font-family: var(--sans);
+    font-size: 10px;
+    letter-spacing: 3px;
+    text-transform: uppercase;
+    color: #2a1404;
+    margin-bottom: 14px;
+  }
+
+  .wanted-icon {
+    width: 96px; height: 96px;
+    border: 2px solid #6a4a10;
+    margin: 0 auto 14px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 50px;
+    background: #d4b870;
+  }
+
+  .wanted-name {
+    font-family: var(--display);
+    font-size: 22px;
+    margin-bottom: 10px;
+    color: #0c0904;
+  }
+
+  .wanted-details {
+    text-align: left;
+    font-size: 12px;
+    line-height: 1.85;
+    border-top: 1px solid #7a5818;
+    padding-top: 10px;
+    margin-top: 8px;
+    color: #180e04;
+  }
+
+  .wanted-details strong {
+    font-family: var(--sans);
+    font-size: 9px;
+    letter-spacing: 2px;
+    text-transform: uppercase;
+    color: #4a2c04;
+  }
+
+  .wanted-reward {
+    margin-top: 12px;
+    color: var(--red);
+    font-family: var(--display);
+    font-size: 15px;
+    letter-spacing: 2px;
+    border-top: 1px solid #7a5818;
+    padding-top: 10px;
+  }
+
+  /* TABLE */
+  .trait-table {
+    width: 100%;
+    border-collapse: collapse;
+    margin: 20px 0;
+    font-size: 12.5px;
+  }
+
+  .trait-table th {
+    background: #0c0904;
+    color: var(--paper);
+    font-family: var(--sans);
+    font-size: 9px;
+    letter-spacing: 2px;
+    text-transform: uppercase;
+    padding: 10px 12px;
+    text-align: left;
+  }
+
+  .trait-table td {
+    padding: 10px 12px;
+    border-bottom: 1px solid rgba(80,55,10,0.22);
+    vertical-align: top;
+    line-height: 1.65;
+  }
+
+  .trait-table tr:nth-child(even) td { background: rgba(100,70,20,0.07); }
+  .plus { color: #145a14; font-weight: bold; }
+  .minus { color: var(--red2); font-weight: bold; }
+
+  /* TIMELINE */
+  .timeline {
+    margin: 22px 0;
+    position: relative;
+    padding-left: 32px;
+  }
+
+  .timeline::before {
+    content: '';
+    position: absolute;
+    left: 9px; top: 0; bottom: 0;
+    width: 2px;
+    background: linear-gradient(to bottom, var(--red) 0%, #5a3408 100%);
+  }
+
+  .tl-item {
+    position: relative;
+    margin-bottom: 18px;
+    background: #e0cc90;
+    border: 1px solid #907830;
+    padding: 12px 16px;
+    font-size: 13px;
+    line-height: 1.7;
+  }
+
+  .tl-item::before {
+    content: '';
+    position: absolute;
+    left: -27px; top: 14px;
+    width: 12px; height: 12px;
+    background: var(--red);
+    border: 2px solid var(--paper);
+    border-radius: 50%;
+  }
+
+  .tl-label {
+    font-family: var(--sans);
+    font-size: 9px;
+    letter-spacing: 2px;
+    text-transform: uppercase;
+    color: var(--red);
+    margin-bottom: 5px;
+  }
+
+  /* EV CARDS */
+  .ev-board { margin: 22px 0; }
+
+  .ev-title {
+    font-family: var(--sans);
+    font-size: 10px;
+    letter-spacing: 3px;
+    text-transform: uppercase;
+    color: var(--red);
+    margin-bottom: 12px;
+    padding-bottom: 5px;
+    border-bottom: 1px solid rgba(80,55,10,0.3);
+  }
+
+  .ev-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(188px, 1fr));
+    gap: 12px;
+  }
+
+  .ev-card {
+    background: #e0cc90;
+    border: 1px solid #907830;
+    border-top: 3px solid var(--red);
+    padding: 14px;
+    font-size: 12.5px;
+    line-height: 1.65;
+  }
+
+  .ev-card .card-label {
+    font-family: var(--sans);
+    font-size: 9px;
+    letter-spacing: 2px;
+    text-transform: uppercase;
+    color: var(--red);
+    margin-bottom: 4px;
+  }
+
+  .ev-card h4 { font-family: var(--display); font-size: 15px; margin-bottom: 5px; }
+
+  /* INGREDIENT CARDS */
+  .ingr-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(168px, 1fr));
+    gap: 12px;
+    margin: 20px 0;
+  }
+
+  .ingr-card {
+    border: 2px solid #907830;
+    background: #e0cc90;
+    padding: 16px;
+    text-align: center;
+    font-size: 13px;
+    line-height: 1.65;
+  }
+
+  .ingr-icon { font-size: 32px; margin-bottom: 8px; }
+  .ingr-card h4 { font-family: var(--display); font-size: 16px; margin-bottom: 5px; }
+
+  /* DISPUTES */
+  .dispute { margin: 22px 0; border: 1px solid #907830; overflow: hidden; }
+
+  .dispute-hd {
+    background: #080604;
+    color: var(--paper);
+    font-family: var(--display);
+    font-size: 16px;
+    padding: 13px 18px;
+    line-height: 1.35;
+  }
+
+  .dispute-hd span {
+    display: block;
+    font-family: var(--sans);
+    font-size: 9px;
+    letter-spacing: 2px;
+    text-transform: uppercase;
+    color: #5a3c10;
+    margin-bottom: 3px;
+  }
+
+  .witness {
+    padding: 18px;
+    font-size: 13px;
+    line-height: 1.85;
+    border-bottom: 1px solid rgba(80,55,10,0.25);
+    background: #e8d898;
+  }
+
+  .witness:last-child { border-bottom: none; }
+
+  .wtag {
+    display: inline-block;
+    font-family: var(--sans);
+    font-size: 9px;
+    letter-spacing: 2px;
+    text-transform: uppercase;
+    padding: 2px 8px;
+    margin-bottom: 8px;
+    border: 1px solid;
+  }
+
+  .wa .wtag { background: #d4ead4; color: #143c14; border-color: #487848; }
+  .wb .wtag { background: #ede0cc; color: #5a2008; border-color: #a06040; }
+  .wm .wtag { background: #e0e0f4; color: #141454; border-color: #5050a0; }
+
+  /* QA */
+  .qa-item { margin-bottom: 14px; border: 1px solid #907830; overflow: hidden; }
+
+  .qa-q {
+    background: #0c0904;
+    color: var(--paper);
+    padding: 14px 18px;
+    font-family: var(--display);
+    font-size: 14.5px;
+    cursor: pointer;
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-start;
+    gap: 12px;
+    transition: background 0.2s;
+    line-height: 1.4;
+  }
+
+  .qa-q:hover { background: #1a1208; }
+
+  .qa-arrow { flex-shrink: 0; font-size: 11px; color: #5a3c10; transition: transform 0.3s; margin-top: 3px; }
+  .qa-item.open .qa-arrow { transform: rotate(180deg); }
+
+  .qa-a {
+    display: none;
+    padding: 16px 18px;
+    font-size: 13px;
+    line-height: 1.85;
+    background: #e8d898;
+    border-top: 2px solid var(--red);
+  }
+
+  .qa-item.open .qa-a { display: block; }
+
+  .qa-alabel {
+    font-family: var(--sans);
+    font-size: 9px;
+    letter-spacing: 2px;
+    text-transform: uppercase;
+    color: var(--red);
+    margin-bottom: 8px;
+  }
+
+  /* REFERENCES */
+  .ref-group { margin-bottom: 24px; }
+
+  .ref-group-title {
+    font-family: var(--sans);
+    font-size: 10px;
+    letter-spacing: 3px;
+    text-transform: uppercase;
+    color: var(--red);
+    padding: 6px 0;
+    border-bottom: 1px solid rgba(80,55,10,0.35);
+    margin-bottom: 10px;
+  }
+
+  .ref-item {
+    font-size: 12px;
+    line-height: 1.75;
+    padding: 8px 0;
+    border-bottom: 1px dotted #a08040;
+    color: #14100a;
+  }
+
+  .ref-item a { color: var(--red2); text-decoration: none; word-break: break-all; }
+  .ref-item a:hover { text-decoration: underline; }
+
+  /* CH NAV */
+  .ch-nav { display: flex; justify-content: space-between; margin-top: 32px; gap: 12px; }
+
+  .ch-btn {
+    background: #0c0904;
+    color: var(--paper);
+    border: none;
+    font-family: var(--typewriter);
+    font-size: 12px;
+    padding: 11px 20px;
+    cursor: pointer;
+    transition: all 0.2s;
+    flex: 1;
+    letter-spacing: 1px;
+  }
+
+  .ch-btn:hover { background: var(--red); }
+
+  .term { font-style: italic; font-weight: bold; color: #18104a; }
+
+  ::-webkit-scrollbar { width: 5px; height: 5px; }
+  ::-webkit-scrollbar-track { background: #040302; }
+  ::-webkit-scrollbar-thumb { background: #2e1804; border-radius: 3px; }
+</style>
+</head>
+<body>
+
+<!-- COVER -->
+<div id="cover">
+  <div class="rain-container" id="rain"></div>
+  <div class="cover-folder">
+    <div class="cover-tab">Somatic Crimes Unit — Precinct 10</div>
+    <div class="case-num">Case File No. 10-37T — Open / Ongoing</div>
+    <div class="cover-title">The Inside Job</div>
+    <div class="cover-sub">A Detective Story About Cancer, Stem Cells and Evolution</div>
+    <div class="stamp">Classified</div>
+    <hr class="cover-rule">
+    <div class="cover-meta">
+      <div>
+        <span class="meta-label">Investigating Officer</span>
+        Detective Mark<br>Somatic Crimes Unit
+      </div>
+      <div>
+        <span class="meta-label">Precinct</span>
+        No. 10 — Stem Cell Districts<br>Human Body, 37 Trillion Residents
+      </div>
+      <div>
+        <span class="meta-label">Case Status</span>
+        Active — Centuries Old
+      </div>
+      <div>
+        <span class="meta-label">Crime</span>
+        Unregulated cellular proliferation<br>Breach of somatic contract
+      </div>
+    </div>
+    <div class="cover-summary">
+      The suspect in this investigation is not an outside criminal. It is one of our own — a cell that was built to divide, survive, and resist death. Its original programming keeps the body alive. Under the right conditions, that same programming drives cancer. This is the case of the inevitable dark side of multicellular life itself.
+    </div>
+    <button class="open-btn" onclick="openSite()">OPEN CASE FILE</button>
+  </div>
+</div>
+
+<!-- MAIN SITE -->
+<div id="main-site">
+
+  <nav id="case-nav">
+    <div class="nav-brand">Case 10-37T</div>
+    <button class="nav-btn active" onclick="showCh(0,this)">Ch.01 Intro</button>
+    <button class="nav-btn" onclick="showCh(1,this)">Ch.02 Stem Cells</button>
+    <button class="nav-btn" onclick="showCh(2,this)">Ch.03 The Trade-off</button>
+    <button class="nav-btn" onclick="showCh(3,this)">Ch.04 Somatic Evolution</button>
+    <button class="nav-btn" onclick="showCh(4,this)">Ch.05 Witnesses</button>
+    <button class="nav-btn" onclick="showCh(5,this)">Ch.06 Interrogation</button>
+    <button class="nav-btn" onclick="showCh(6,this)">Ch.07 References</button>
+  </nav>
+
+  <div id="content">
+
+    <!-- CH 01 -->
+    <div class="chapter active" id="ch-0">
+      <div class="doc-paper">
+        <div class="ch-label">Chapter 01</div>
+        <div class="ch-title">Case File Opens</div>
+        <div class="ch-sub">Introduction — the oldest crime in biological history</div>
+
+        <p>It was raining the day they called me in. The kind of rain that perfectly sets the scene for a crime mystery.</p>
+
+        <p>Hello everyone, let me introduce myself, my name is Mark. Better known as Detective Mark. I work in the deep depths of the human body, the stem cell districts, the quiet alleys where cells work to divide day and night long to keep the body running. Around thirty trillion human cell residents reside in this metropolis of skin, each with their own jobs to do and following the same rules. Most of them cooperate, divide when they're told to divide, die when they're told to die, keep to their districts. A beautiful, brutal social contract that's been running for the last 600 million years.</p>
+
+        <p>Most of the cells follow the rules.</p>
+
+        <p>Only, most of them..</p>
+
+        <p>The case that I'm about to walk you guys through is perhaps one of the oldest in the books. It predates nations, whole family lineages, even fossils. Multicellular life has existed for 600 million years and this same crime repeatedly keeps on showing up at the scene.</p>
+
+        <div class="wanted">
+          <div class="wanted-top">WANTED</div>
+          <div class="wanted-for">For crimes against somatic order</div>
+          <div class="wanted-icon">🦠</div>
+          <div class="wanted-name">CANCER</div>
+          <div class="wanted-details">
+            <strong>Known Since:</strong> 600 million years<br>
+            <strong>Evidence in Fossils:</strong> Dinosaur vertebrae showing abnormal growths preserved in stone (Rothschild et al., 2003)<br>
+            <strong>Modus Operandi:</strong> Exploits the body's own survival programming<br>
+            <strong>Last Known Location:</strong> Every tissue with dividing cells
+          </div>
+          <div class="wanted-reward">Suspect: One of Our Own</div>
+        </div>
+
+        <p>The evidence trail goes far deeper than even human history. Tumors have been discovered in fossilized bones going back millions of years. Paleontologists have even found signs of cancer in dinosaurs as their vertebrae were marked by growths that were abnormal and preserved in stone (Rothschild et al., 2003).</p>
+
+        <p>The strange part of this case is that it isn't a guessing game. We aren't trying to find the culprit, we already know who it is. We've known the suspect for a long time.</p>
+
+        <p>The culprit just so happens to be one of our own cells.</p>
+
+        <p>The real question, the one that keeps on landing on my desk in a case file, is why this crime keeps on occurring and happening at all. Why even after hundreds of million of years of natural selection, evolution has never eliminated the possibility of cancer?</p>
+
+        <p>Yet however the case has changed over time.</p>
+
+        <p>Cancer has affected humans since prehistoric times, however the prevalence has increased dramatically in recent decades. Part of the explanation for this is simple, people live longer. As the longer the body runs, the more opportunities the cells have to accumulate mutations. More aging populations means more time for the crime to unfold (Hulvat, 2020).</p>
+
+        <p>BUT however, that is not the whole story.</p>
+
+        <p>In the past half century, the number of case files has multiplied along with changes associated to human behaviour and the environment. New layers have been added to the investigation due to increased exposure from carcinogens, from pollution to chemicals found in consumer products (Franken et al., 2017).</p>
+
+        <p>Still, these factors only help to explain part of the picture.</p>
+
+        <p>What every textbook gets wrong about this case. They treat cancer like an accident, a random error, a molecule misfiring, or just like its bad luck in a dark alley. There is a factor of truth to that but it misses the deeper story.</p>
+
+        <p>The deeper story is that the cell that becomes cancer was built to do almost everything it ends up doing. Divide without stopping. Resist death. Renew itself repeatedly. These aren't criminal acts it learned on the street. They're its original programming. The programming that keeps you alive.</p>
+
+        <p>Stem cells are the body's maintenance crew. Your intestinal lining replaces itself around every five days. Stem cells handle that. Your bone marrow produces around two hundred billion red blood cells every day. Stem cells handle that too. Skin, hair follicles, immune cells, all are stem cells. They divide fast, live long, and refuse to die on command (McCulloch and Till, 2005).</p>
+
+        <blockquote>The exact properties, the ones that evolution spent hundreds of millions of years building, the ones that are genuinely keeping you alive right now, are the same properties that make cancer not just possible, but inevitable over a long enough timeline.</blockquote>
+
+        <div class="course-box">
+          This case connects to the HSCI 324 theme that adaptations shaped by selection can carry disadvantages under certain circumstances. Properties of stem cells were selected for because of their benefits to survival, but the cost is cancer that is probable over a human's lifespan with many accumulated divisions.
+        </div>
+
+        <p>That is the case. Not what cancer does but why cancer is the inevitable dark side of the very system that keeps you alive.</p>
+
+        <p style="font-family:var(--display);font-size:19px;text-align:center;color:var(--red);margin-top:20px;">We've got a case to crack!</p>
+
+        <div class="ch-nav">
+          <button class="ch-btn" onclick="showCh(1,document.querySelectorAll('.nav-btn')[1])">Next: Chapter 02</button>
+        </div>
+      </div>
+    </div>
+
+    <!-- CH 02 -->
+    <div class="chapter" id="ch-1">
+      <div class="doc-paper">
+        <div class="ch-label">Chapter 02</div>
+        <div class="ch-title">Profiling the Suspect</div>
+        <div class="ch-sub">Stem cell properties — capabilities, permissions and privileges</div>
+
+        <p>Every investigation begins with understanding the environment where the crime occurred. In this case, the human body is the environment, a massive, tightly coordinated city of over 37 trillion cells. Most members of this community live short predictable lives. They perform their tasks, divide a few times and eventually retire though programmed cell death.</p>
+
+        <p>But not all cells obey the law.</p>
+
+        <p>Stem cells operate under their own set of rules. They are the body's permanent repair and maintenance crew, responsible for maintaining organs that constantly experience wear and tear. An example is the intestinal epithelium, which is one of the most rapidly renewing tissues in the body and is replaced approximately every four to five days through the activity of intestinal stem cells. In another case, hematopoietic stem cells in bone marrow continually generate new blood cells to maintain circulation. Without these regenerative stem cell populations, tissues would quickly deteriorate and fail (Clevers, 2011).</p>
+
+        <p>To continuously undergo this workload, stem cells possess abilities that most other cells do not. They are able to divide repeatedly resulting in infinite self-renewal and survive for long periods. Simultaneously, they generate specialised daughter cells that replace damaged or aging tissue. These properties allow tissues to maintain stability across decades and are essential for normal regeneration and repair (Poliwoda et al., 2022).</p>
+
+        <p>From an evolutionary perspective, these abilities represent adaptations that were strongly favoured by natural selection. Organisms capable of repairing injury and maintaining internal systems would have had significant survival advantages.</p>
+
+        <p>But these privileges come with a cost.</p>
+
+        <p>Every time a stem cell divides, its DNA must be copied. Although DNA replication is highly accurate, mutation errors may occur. Over millions of divisions across a lifetime, these errors accumulate and introduce genetic variation amongst cells. While most mutations may be harmless, some affect genes controlling cell growth or survival. When this occurs, a mutated cell may gain a selective advantage over neighboring cells and begin expanding within the tissue environment (Greaves and Maley, 2012).</p>
+
+        <div class="ev-board">
+          <div class="ev-title">Exhibit B — Stem Cell Traits as a Trade-off</div>
+          <table class="trait-table">
+            <thead>
+              <tr>
+                <th>Stem Cell Trait</th>
+                <th>What It Does</th>
+                <th>Benefit</th>
+                <th>The Risk</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td><strong>Self-Renewal</strong></td>
+                <td>Divides to produce copies of itself indefinitely</td>
+                <td class="plus">+ Tissue pool never depleted</td>
+                <td class="minus">— Mutations preserved and amplified</td>
+              </tr>
+              <tr>
+                <td><strong>Rapid Proliferation</strong></td>
+                <td>Divides quickly to meet tissue demand</td>
+                <td class="plus">+ Fast tissue repair after injury</td>
+                <td class="minus">— More divisions means more replication errors</td>
+              </tr>
+              <tr>
+                <td><strong>Apoptosis Resistance</strong></td>
+                <td>Survives signals that would kill other cells</td>
+                <td class="plus">+ Not lost during normal cellular stress</td>
+                <td class="minus">— Damaged cells may survive when they should not</td>
+              </tr>
+              <tr>
+                <td><strong>Long Lifespan</strong></td>
+                <td>Persists in tissues across decades</td>
+                <td class="plus">+ Long-term regenerative capacity</td>
+                <td class="minus">— Longer accumulation of mutations over time</td>
+              </tr>
+              <tr>
+                <td><strong>Epigenetic Plasticity</strong></td>
+                <td>Can change gene expression patterns flexibly</td>
+                <td class="plus">+ Adapts to varied tissue environments</td>
+                <td class="minus">— Dysregulation can alter growth-control genes</td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+
+        <div class="sec-div"><span>Mutation Accumulation Timeline</span></div>
+
+        <div class="timeline">
+          <div class="tl-item">
+            <div class="tl-label">Stage 1 — Normal Function</div>
+            Stem cell divides normally, replacing intestinal lining or blood cells. Each division copies roughly 3 billion DNA base pairs with high accuracy.
+          </div>
+          <div class="tl-item">
+            <div class="tl-label">Stage 2 — First Mutation</div>
+            A replication error occurs in a gene regulating growth. The mutation is passed to all daughter cells. Most mutations are harmless.
+          </div>
+          <div class="tl-item">
+            <div class="tl-label">Stage 3 — Second Mutation Accumulates</div>
+            Over years of continued division, another mutation arises in a tumor-suppressor gene. The stem cell's daughter cells proliferate slightly faster.
+          </div>
+          <div class="tl-item">
+            <div class="tl-label">Stage 4 — Clonal Expansion</div>
+            The slightly-faster-dividing clone begins to outcompete neighboring cells. A selective advantage takes hold within the tissue microenvironment.
+          </div>
+          <div class="tl-item">
+            <div class="tl-label">Stage 5 — Tumor Initiation</div>
+            With sufficient accumulated mutations in growth-regulating genes, normal growth controls are bypassed. The cell no longer obeys the social contract.
+          </div>
+        </div>
+
+        <div class="det-note">
+          This is where the investigation takes an unexpected turn. The cell responsible for maintaining tissues and keeping the body alive may also provide the conditions under which cancer can emerge. The stem cell, once seen as the body's maintenance worker, now begins to look like a key suspect in the case.<br><br>
+          As a detective I must wonder. If stem cells are so important for survival, why has evolution not eliminated the mechanism that causes cancer to develop?
+        </div>
+
+        <div class="ch-nav">
+          <button class="ch-btn" onclick="showCh(0,document.querySelectorAll('.nav-btn')[0])">Ch.01</button>
+          <button class="ch-btn" onclick="showCh(2,document.querySelectorAll('.nav-btn')[2])">Ch.03</button>
+        </div>
+      </div>
+    </div>
+
+    <!-- CH 03 -->
+    <div class="chapter" id="ch-2">
+      <div class="doc-paper">
+        <div class="ch-label">Chapter 03</div>
+        <div class="ch-title">The Long Game</div>
+        <div class="ch-sub">Evolutionary trade-offs in stem cells — the double agent</div>
+
+        <p>By the case folder, I could already tell this suspect was extraordinary. Most cells in this city live by the rules of dividing when told, stopping when signaled and die when damaged. However for the case of stem cells they operate under a different set of permissions, with the authority to divide, persist and rebuild. The body relies on these cells to maintain tissues that constantly experience damage or loss, such as intestinal lining and blood system.</p>
+
+        <p>This is what makes this particular case complicated.</p>
+
+        <p>The same features that make stem cells indispensable also make them dangerous. Rapid proliferation keeps tissues supplied with fresh cells, but every additional division creates another opportunity for replication error. Self renewal prevents the stem pool from being depleted but it also means any mutation that appears in a stem cell can be preserved and copied forward indefinitely. Resistance to cell death protects valuable regenerative cells during stress, yet that same survival capacity can become a liability if the wrong genetic changes accumulate (Reya et al., 2001).</p>
+
+        <p>To put it into simpler terms, the system that protects the body simultaneously carries a built in vulnerability.</p>
+
+        <p>When mutations occur in long-lived stem cells, they can persist for decades because stem cells have that ability to self renew and continuously generate new daughter cells. This means that a single mutation arising in a stem cell can be inherited by many future cells within the same tissue. Over time, the gradual accumulation of mutations increases the probability that certain cells may behave abnormally and escape normal growth controls.</p>
+
+        <div class="ev-board">
+          <div class="ev-title">Exhibit D — The Evidence Board: Stem Cell Traits as a Trade-off</div>
+          <div class="ev-grid">
+            <div class="ev-card">
+              <div class="card-label">Short Term</div>
+              <h4>Survival Advantage</h4>
+              Stem cell traits support survival by allowing tissues to regenerate and recover from injury.
+            </div>
+            <div class="ev-card">
+              <div class="card-label">Long Term — Decades of Divisions</div>
+              <h4>Mutation Accumulation</h4>
+              Accumulation of replication errors becomes increasingly likely. Occasionally these mutations affect genes that regulate cell growth or survival, giving certain cells a small advantage over their neighbors (Greaves and Maley, 2012).
+            </div>
+            <div class="ev-card">
+              <div class="card-label">The Pattern</div>
+              <h4>Higher Division, Higher Risk</h4>
+              Research comparing different tissues has shown that organs with higher numbers of lifetime stem cell divisions tend to show higher cancer incidence.
+            </div>
+          </div>
+        </div>
+
+        <p>Over time, those advantages can accumulate.</p>
+
+        <p>Research comparing different tissues has shown that organs with higher numbers of lifetime stem cell divisions tend to show higher cancer incidence. This suggests that normal tissue maintenance itself contributes to the probability that mutations will eventually arise in key regulatory genes.</p>
+
+        <p>From an evolutionary perspective, this reflects a fundamental biological compromise.</p>
+
+        <p>Natural selection favours traits that improve survival and reproductive success early in life. Stem cells play a critical role in this process by allowing organisms to repair damage, regenerate tissues and maintain organ functions across reproductive years. However the same biological traits that provide these benefits may carry long term costs that appear later in life, when natural selection is weaker.</p>
+
+        <p>This evolutionary compromise is known as <span class="term">antagonistic pleiotropy</span>, a single biological trait provides advantages early in life but produces harmful consequences later.</p>
+
+        <p>Stem cell biology fits this pattern well. The capacity for self-renewal, rapid proliferation and long term persistence allows tissues to function across decades. Yet those same properties create the condition under which cancer can eventually emerge (Aktipis et al., 2015).</p>
+
+        <p>The genes associated with these processes tell the same story.</p>
+
+        <p>One of the most researched examples is TP53, often described as the "guardian of the genome". Its function is to help detect DNA damage and trigger apoptosis when cells become too damaged to repair. TP53 is the most frequently mutated gene in human cancers, with mutation occurring in more than half of all tumours (Vousden and Prives, 2009).</p>
+
+        <div class="wanted">
+          <div class="wanted-top">SUSPECT</div>
+          <div class="wanted-for">Gene of Interest — High Mutation Frequency</div>
+          <div class="wanted-icon">🧬</div>
+          <div class="wanted-name">TP53</div>
+          <div class="wanted-details">
+            <strong>Alias:</strong> "The Guardian of the Genome"<br>
+            <strong>Normal Function:</strong> Detects DNA damage; triggers apoptosis or repair when cells become too damaged<br>
+            <strong>When Mutated:</strong> Cells with damaged DNA survive and continue dividing<br>
+            <strong>Frequency:</strong> Mutated in more than half of all human tumours (Vousden and Prives, 2009)<br>
+            <strong>Status:</strong> Most frequently mutated gene in human cancer
+          </div>
+          <div class="wanted-reward">Most Wanted in Oncology</div>
+        </div>
+
+        <p>The body did not evolve stem cells to cause disease but instead cancer emerged as an unintended consequence of biological systems that were selected because they help organisms survive.</p>
+
+        <p>The benefits of these traits appear immediately: tissues can regenerate, wounds can heal, and organs can continue functioning. The costs may only become visible decades later.</p>
+
+        <blockquote>This is the trade-off that multicellular life accepts.</blockquote>
+
+        <div class="ch-nav">
+          <button class="ch-btn" onclick="showCh(1,document.querySelectorAll('.nav-btn')[1])">Ch.02</button>
+          <button class="ch-btn" onclick="showCh(3,document.querySelectorAll('.nav-btn')[3])">Ch.04</button>
+        </div>
+      </div>
+    </div>
+
+    <!-- CH 04 -->
+    <div class="chapter" id="ch-3">
+      <div class="doc-paper">
+        <div class="ch-label">Chapter 04</div>
+        <div class="ch-title">Evolution's Black Market</div>
+        <div class="ch-sub">Darwinian and somatic evolution — the underground operation</div>
+
+        <p>In this case, we discover that the body has been running its own kind of underground evolution, quietly unfolding for decades.</p>
+
+        <p>I have been on this beat long enough to know that crime doesn't appear out of nowhere. It organizes itself. It evolves. A mutation that starts as a minor bookkeeping error becomes, twenty years later, becomes the operation controlling the entire district.</p>
+
+        <p>Cancer works in much the same way. It doesn't emerge all at once, it develops gradually. It is a process, a Darwinian evolutionary process, taking place within the tissue of a single organism, often over many years or even decades.</p>
+
+        <p>And for evolution to run, three ingredients are required. When I checked the file, the tumour had all three.</p>
+
+        <div class="ingr-grid">
+          <div class="ingr-card">
+            <div class="ingr-icon">🎲</div>
+            <h4>Variation</h4>
+            Mutations from replication errors create genetic diversity among cells in a tissue — the raw material for selection.
+          </div>
+          <div class="ingr-card">
+            <div class="ingr-icon">⚔️</div>
+            <h4>Selection</h4>
+            Cells with mutations that confer growth or survival advantages outcompete neighbors — classic natural selection, within the body.
+          </div>
+          <div class="ingr-card">
+            <div class="ingr-icon">👪</div>
+            <h4>Heritability</h4>
+            Daughter cells inherit mutations from parent stem cells, allowing advantageous traits to be amplified across cellular generations.
+          </div>
+        </div>
+
+        <p>A tumour is not a uniform mass of identical abnormal cells. Rather, it represents a population, a Darwinian ecosystem characterized by genetic diversity and ongoing selection pressure. Different regions of the tumour often carry distinct mutation profiles, while subclonal populations compete within the tumour microenvironment. Cells with advantageous traits outcompete others and dominate the population.</p>
+
+        <p>Even a small growth advantage compounds dramatically over cellular generations. Small consistent advantages become dominant clones over months to years. This is why cancer is primarily associated with aging. Somatic evolution takes time and long lived humans provide the time necessary for these evolutionary processes to unfold (Alberts et al., 2002).</p>
+
+        <div class="sec-div"><span>The Treatment Problem</span></div>
+
+        <p>Here is what makes this case particularly hard to close. Treatment becomes part of the crime scene.</p>
+
+        <p>Chemotherapy then acts as a strong selective pressure on this evolving population. A drug that kills 95% of a tumour does not end the evolutionary process, it changes it. The majority of drug sensitive cells die, but that 5% of cells that may carry pre-existing resistance mutations. Once the sensitive cells are removed, the resistant cells suddenly have access to more space, nutrients with less competition. These surviving cells then expand and undergo clonal selection. Over time, the resistant clones can become the dominant population, demonstrating evolution in action. This is why treatment can unintentionally drive the selection of drug-resistant cancer cells and lead to tumour recurrence (O'Brien et al., 2006).</p>
+
+        <blockquote>The cancer didn't develop resistance. It was selected for it. The resistant subclone was always there, a minor variant in the tumour population, waiting for the right conditions to expand. That is Darwin's racket — turn your treatment strategy against you.</blockquote>
+
+        <p>This is why the most promising new approach, adaptive therapy, doesn't aim to eradicate the tumour completely. Instead, they focus on managing it, keeping a stable population of treatment-sensitive cells alive so that they continue to compete with resistant clones. By doing this, tumour's own evolutionary dynamics will be a weapon against it (Gatenby et al., 2009).</p>
+
+        <div class="ch-nav">
+          <button class="ch-btn" onclick="showCh(2,document.querySelectorAll('.nav-btn')[2])">Ch.03</button>
+          <button class="ch-btn" onclick="showCh(4,document.querySelectorAll('.nav-btn')[4])">Ch.05</button>
+        </div>
+      </div>
+    </div>
+
+    <!-- CH 05 -->
+    <div class="chapter" id="ch-4">
+      <div class="doc-paper">
+        <div class="ch-label">Chapter 05</div>
+        <div class="ch-title">Conflicting Witnesses</div>
+        <div class="ch-sub">Scientific disputes — the open questions on the file</div>
+
+        <p>No case is totally clean. Witnesses contradict each other as evidence can point two ways at once. A good detective views both contradictions and doesn't ignore them.</p>
+
+        <p>Here are the open disputes on the file.</p>
+
+        <div class="dispute">
+          <div class="dispute-hd">
+            <span>Open Dispute 01</span>
+            Bad luck vs lifestyle. How much of cancer risk comes from intrinsic cell division vs from the environment?
+          </div>
+          <div class="witness wa">
+            <div class="wtag">Witness A — The Intrinsic Division View</div>
+            <p>Back in 2015, Tomasetti and Vogelstein compared cancer incidence across many tissue types and found something striking, that tissues that undergo more lifetime stem cell divisions tend to have higher cancer rates regardless of known environmental exposures (Tomasetti and Vogelstein, 2015). The majority of driver mutations don't arise from environmental mutagens but from unavoidable replication errors. Every time a stem cell divides, it must copy its DNA. Copying DNA introduces occasional replication errors and over decades of tissue maintenance these errors accumulate. In this view, many cancers don't primarily arise from external exposures but just from the unavoidable mathematics of DNA replication. So, the price of maintaining living tissues contributes to some fraction of cancer risk (Tomasetti, Li and Vogelstein, 2017).</p>
+          </div>
+          <div class="witness wb">
+            <div class="wtag">Witness B — Environment Matters View</div>
+            <p>The "bad luck" framing was criticized for not appropriately weighing environmental and lifestyle contributions especially for cancers that have well established environmental causes such as lung cancer, hepatocellular carcinoma, or skin cancer (Couzin-Frankel, 2015). Factors such as tobacco, UV radiation, chronic infection, and diet can amplify the baseline mutation rate beyond what stem cell divisions alone would produce (Song and Giovannucci, 2016; Wu et al., 2016). So, by calling it bad luck, it takes away from the actual preventative value of lifestyle and policy interventions (Couzin-Frankel, 2015).</p>
+          </div>
+          <div class="witness wm">
+            <div class="wtag">Detective Mark's Assessment</div>
+            <p>Both witnesses are telling the truth about different parts of the same case. Intrinsic replication errors set a baseline cancer risk that exists even in the absence of any environmental exposure. Environmental factors act to elevate that baseline.</p>
+          </div>
+        </div>
+
+        <div class="dispute" style="margin-top:20px;">
+          <div class="dispute-hd">
+            <span>Open Dispute 02</span>
+            Does a boss cell run the tumour?
+          </div>
+          <div class="witness wa">
+            <div class="wtag">Witness A — The Hierarchy Model</div>
+            <p>According to the cancer stem cell (CSC) model, tumours are organized like a hierarchy. A small subpopulation of cancer stem cells that are identified by markers like CD44+/CD24 in breast cancer, and CD133+ in glioblastoma maintain the tumour, drive regrowth after treatment, and are responsible for metastasis (Al-Hajj et al., 2003; Singh et al., 2003). By taking out CSC subpopulation, you take out the majority of the cancer operation. Strong evidence in leukemia, glioblastoma, and breast cancer supports the hierarchy model (Lapidot et al., 1994; Al-Hajj et al., 2003).</p>
+          </div>
+          <div class="witness wb">
+            <div class="wtag">Witness B — The Plasticity Model</div>
+            <p>Other researchers argue that the hierarchy is not fixed. Under stress, especially after chemotherapy ordinary tumor cells can dedifferentiate and revert to a stem cell like state. CSC identity is a dynamic state and not a defined subpopulation. Therefore, by targeting surface markers alone won't eliminate the operation because the other remaining cells can re acquire stem like properties. So, the hierarchy exists but it is fluid (Gupta et al., 2011).</p>
+          </div>
+          <div class="witness wm">
+            <div class="wtag">Detective Mark's Assessment</div>
+            <p>Evidence suggests that both models are operating. The hierarchy and plasticity models aren't mutually exclusive. What matters more depends on the type of tumor and the clinical context. More cancer biology research is needed, therefore the case is still open.</p>
+          </div>
+        </div>
+
+        <div class="dispute" style="margin-top:20px;">
+          <div class="dispute-hd">
+            <span>Open Dispute 03</span>
+            Is antagonistic pleiotropy the right framework for cancer?
+          </div>
+          <div class="witness wa">
+            <div class="wtag">Witness A — The Trade-off Framework</div>
+            <p>Supporters of the antagonistic pleiotropy argue that stem cell properties are actively maintained by selection throughout reproductive life and are not neutral post reproductive drift (Williams, 1957). Cancer affects reproductive age individuals too so the cost which is cancer is not exclusively post reproductive. Rapid division and self renewal keep tissues functioning and organisms alive long enough to reproduce so these traits help to provide early life benefits. The downside which is cancer risk is tied to these same properties therefore, cancer represents an evolutionary tradeoff as it has benefits early in life and costs later (Ungewitter and Scrable, 2008).</p>
+          </div>
+          <div class="witness wb">
+            <div class="wtag">Witness B — Neutral Drift Argument</div>
+            <p>Others argue that the story may be simpler. If most cancer mortality occurs after reproductive age then natural selection pressure against cancer enabling stem cells properties is very weak (Medawar, 1952). Under this model, the relationship between stem cells and cancer may not be a true evolutionary tradeoff but more of a case of neutral late life consequences of traits that selection simply can't see well enough to modify and just didn't have a strong reason to eliminate (Austad and Hoffman, 2018).</p>
+          </div>
+          <div class="witness wm">
+            <div class="wtag">Detective Mark's Assessment</div>
+            <p>This one remains an open question and is a legitimate theoretical dispute. Some aspects of cancer risk reflect evolutionary tradeoffs whereas others may be closer to neutral late life consequences of traits that were favored by evolution for different reasons entirely. The distinction mainly matters for how we theorise about the evolutionary origins of cancer. So, the case is far from closed.</p>
+          </div>
+        </div>
+
+        <div class="ch-nav">
+          <button class="ch-btn" onclick="showCh(3,document.querySelectorAll('.nav-btn')[3])">Ch.04</button>
+          <button class="ch-btn" onclick="showCh(5,document.querySelectorAll('.nav-btn')[5])">Ch.06</button>
+        </div>
+      </div>
+    </div>
+
+    <!-- CH 06 -->
+    <div class="chapter" id="ch-5">
+      <div class="doc-paper">
+        <div class="ch-label">Chapter 06</div>
+        <div class="ch-title">The Interrogation Room</div>
+        <div class="ch-sub">Questions for the jury — click each question to reveal the verdict</div>
+
+        <p>Every good detective's work ends in a courtroom. Now it's your turn to prove you followed the case. Click each question to reveal the verdict.</p>
+
+        <div class="qa-item" onclick="toggleQA(this)">
+          <div class="qa-q">From an evolutionary perspective, why has natural selection not eliminated the cancer risk associated with stem cell division?<span class="qa-arrow">▼</span></div>
+          <div class="qa-a">
+            <div class="qa-alabel">Verdict</div>
+            Stem cell division is essential for survival and cancer occurs after reproduction so evolution favors a balance between tissue regeneration and mutation risk rather than protection from cancer.
+          </div>
+        </div>
+
+        <div class="qa-item" onclick="toggleQA(this)">
+          <div class="qa-q">Imagine a mutation occurs in a stem cell in the intestinal lining that increases its rate of division. Predict what might happen to the population of cells in that tissue over time, and explain why.<span class="qa-arrow">▼</span></div>
+          <div class="qa-a">
+            <div class="qa-alabel">Verdict</div>
+            Clonal expansion, competitive advantage, increased mutation accumulation and possible tumour formation.
+          </div>
+        </div>
+
+        <div class="qa-item" onclick="toggleQA(this)">
+          <div class="qa-q">If cancer exists, does it mean evolution failed to optimize the human body? True or False.<span class="qa-arrow">▼</span></div>
+          <div class="qa-a">
+            <div class="qa-alabel">Verdict</div>
+            False.
+          </div>
+        </div>
+
+        <div class="qa-item" onclick="toggleQA(this)">
+          <div class="qa-q">Most mutations that occur in cells are harmful. True or False.<span class="qa-arrow">▼</span></div>
+          <div class="qa-a">
+            <div class="qa-alabel">Verdict</div>
+            False.
+          </div>
+        </div>
+
+        <div class="qa-item" onclick="toggleQA(this)">
+          <div class="qa-q">If adaptive therapy aims to control tumour evolution rather than eliminate the tumour, when might a physician still choose chemotherapy, and what factors would influence that decision?<span class="qa-arrow">▼</span></div>
+          <div class="qa-a">
+            <div class="qa-alabel">Verdict</div>
+            Tumour growth rate, risk of resistance, patient condition and curability.
+          </div>
+        </div>
+
+        <div class="ch-nav">
+          <button class="ch-btn" onclick="showCh(4,document.querySelectorAll('.nav-btn')[4])">Ch.05</button>
+          <button class="ch-btn" onclick="showCh(6,document.querySelectorAll('.nav-btn')[6])">References</button>
+        </div>
+      </div>
+    </div>
+
+    <!-- CH 07 -->
+    <div class="chapter" id="ch-6">
+      <div class="doc-paper">
+        <div class="ch-label">Chapter 07</div>
+        <div class="ch-title">Evidence Dossier</div>
+        <div class="ch-sub">Full citation record — all sources used in the investigation</div>
+
+        <div class="ref-group">
+          <div class="ref-group-title">Chapter 01 — Introduction</div>
+          <div class="ref-item">Faguet, G. B. (2014). A brief history of cancer: Age-old milestones underlying our current knowledge database. <em>International Journal of Cancer, 136</em>(9), 2022–2036. <a href="https://doi.org/10.1002/ijc.29134" target="_blank">https://doi.org/10.1002/ijc.29134</a></div>
+          <div class="ref-item">Franken, C., Koppen, G., Lambrechts, N., Govarts, E., et al. (2017). Environmental exposure to human carcinogens in teenagers and the association with DNA damage. <em>Environmental Research, 152</em>, 165–174. <a href="https://doi.org/10.1016/j.envres.2016.10.012" target="_blank">https://doi.org/10.1016/j.envres.2016.10.012</a></div>
+          <div class="ref-item">Hulvat, M. C. (2020). Cancer Incidence and Trends. <em>Surgical Clinics of North America, 100</em>(3), 469–481. <a href="https://doi.org/10.1016/j.suc.2020.01.002" target="_blank">https://doi.org/10.1016/j.suc.2020.01.002</a></div>
+          <div class="ref-item">McCulloch, E. A., and Till, J. E. (2005). Perspectives on the properties of stem cells. <em>Nature Medicine, 11</em>(10), 1026–1028. <a href="https://doi.org/10.1038/nm1005-1026" target="_blank">https://doi.org/10.1038/nm1005-1026</a></div>
+          <div class="ref-item">Rothschild, B. M., Tanke, D. H., Helbling, M., and Martin, L. D. (2003). Epidemiologic study of tumors in dinosaurs. <em>Naturwissenschaften, 90</em>(11), 495–500. <a href="https://doi.org/10.1007/s00114-003-0473-9" target="_blank">https://doi.org/10.1007/s00114-003-0473-9</a></div>
+          <div class="ref-item">Sender, R., Fuchs, S., and Milo, R. (2016). Revised estimates for the number of human and bacteria cells in the body. <em>PLOS Biology, 14</em>(8), e1002533. <a href="https://doi.org/10.1371/journal.pbio.1002533" target="_blank">https://doi.org/10.1371/journal.pbio.1002533</a></div>
+        </div>
+
+        <div class="ref-group">
+          <div class="ref-group-title">Chapter 02 — Stem Cell Properties</div>
+          <div class="ref-item">Clevers, H. (2011). The cancer stem cell: premises, promises and challenges. <em>Nature Medicine, 17</em>(3), 313–319. <a href="https://doi.org/10.1038/nm.2304" target="_blank">https://doi.org/10.1038/nm.2304</a></div>
+          <div class="ref-item">Greaves, M., and Maley, C. C. (2012). Clonal evolution in cancer. <em>Nature, 481</em>(7381), 306–313. <a href="https://doi.org/10.1038/nature10762" target="_blank">https://doi.org/10.1038/nature10762</a></div>
+          <div class="ref-item">Poliwoda, S., Noor, N., Downs, E., Schaaf, A., et al. (2022). Stem cells: a comprehensive review of origins and emerging clinical roles in medical practice. <em>Orthopedic Reviews, 14</em>(3). <a href="https://doi.org/10.52965/001c.37498" target="_blank">https://doi.org/10.52965/001c.37498</a></div>
+        </div>
+
+        <div class="ref-group">
+          <div class="ref-group-title">Chapter 03 — Evolutionary Trade-offs</div>
+          <div class="ref-item">Aktipis, C. A., Boddy, A. M., Jansen, G., Hibner, U., et al. (2015). Cancer across the tree of life: cooperation and cheating in multicellularity. <em>Philosophical Transactions of the Royal Society B, 370</em>(1673), 20140219. <a href="https://doi.org/10.1098/rstb.2014.0219" target="_blank">https://doi.org/10.1098/rstb.2014.0219</a></div>
+          <div class="ref-item">Reya, T., Morrison, S. J., Clarke, M. F., and Weissman, I. L. (2001). Stem cells, cancer, and cancer stem cells. <em>Nature, 414</em>(6859), 105–111. <a href="https://doi.org/10.1038/35102167" target="_blank">https://doi.org/10.1038/35102167</a></div>
+          <div class="ref-item">Vousden, K. H., and Prives, C. (2009). Blinded by the light: the growing complexity of p53. <em>Cell, 137</em>(3), 413–431. <a href="https://doi.org/10.1016/j.cell.2009.04.037" target="_blank">https://doi.org/10.1016/j.cell.2009.04.037</a></div>
+        </div>
+
+        <div class="ref-group">
+          <div class="ref-group-title">Chapter 04 — Somatic Evolution</div>
+          <div class="ref-item">Alberts, B., Johnson, A., Lewis, J., et al. (2002). <em>Molecular Biology of the Cell</em> (4th ed.). Garland Science. <a href="https://www.ncbi.nlm.nih.gov/books/NBK26891/" target="_blank">https://www.ncbi.nlm.nih.gov/books/NBK26891/</a></div>
+          <div class="ref-item">Gatenby, R. A., Silva, A. S., Gillies, R. J., and Frieden, B. R. (2009). Adaptive therapy. <em>Cancer Research, 69</em>(11), 4894–4903. <a href="https://doi.org/10.1158/0008-5472.CAN-08-3658" target="_blank">https://doi.org/10.1158/0008-5472.CAN-08-3658</a></div>
+          <div class="ref-item">O'Brien, M. E., Borthwick, A., Rigg, A., Leary, A., et al. (2006). Mortality within 30 days of chemotherapy: a clinical governance benchmarking issue for oncology patients. <em>British Journal of Cancer, 95</em>(12), 1632–1636. <a href="https://doi.org/10.1038/sj.bjc.6603498" target="_blank">https://doi.org/10.1038/sj.bjc.6603498</a></div>
+        </div>
+
+        <div class="ref-group">
+          <div class="ref-group-title">Chapter 05 — Scientific Disputes</div>
+          <div class="ref-item">Tomasetti, C., and Vogelstein, B. (2015). Variation in cancer risk among tissues can be explained by the number of stem cell divisions. <em>Science, 347</em>(6217), 78–81. <a href="https://doi.org/10.1126/science.1260825" target="_blank">https://doi.org/10.1126/science.1260825</a></div>
+          <div class="ref-item">Tomasetti, C., Li, L., and Vogelstein, B. (2017). Stem cell divisions, somatic mutations, cancer etiology, and cancer prevention. <em>Science, 355</em>(6331), 1330–1334. <a href="https://doi.org/10.1126/science.aaf9011" target="_blank">https://doi.org/10.1126/science.aaf9011</a></div>
+          <div class="ref-item">Couzin-Frankel, J. (2015). Biomedicine. The bad luck of cancer. <em>Science, 347</em>(6217), 12–13. <a href="https://doi.org/10.1126/science.347.6217.12" target="_blank">https://doi.org/10.1126/science.347.6217.12</a></div>
+          <div class="ref-item">Song, M., and Giovannucci, E. (2016). Preventable incidence and mortality of carcinoma associated with lifestyle factors among white adults in the United States. <em>JAMA Oncology, 2</em>(9), 1154–1161. <a href="https://doi.org/10.1001/jamaoncol.2016.0843" target="_blank">https://doi.org/10.1001/jamaoncol.2016.0843</a></div>
+          <div class="ref-item">Wu, S., Powers, S., Zhu, W., and Hannun, Y. A. (2016). Substantial contribution of extrinsic risk factors to cancer development. <em>Nature, 529</em>(7584), 43–47. <a href="https://doi.org/10.1038/nature16166" target="_blank">https://doi.org/10.1038/nature16166</a></div>
+          <div class="ref-item">Al-Hajj, M., Wicha, M. S., Benito-Hernandez, A., Morrison, S. J., and Clarke, M. F. (2003). Prospective identification of tumorigenic breast cancer cells. <em>PNAS, 100</em>(7), 3983–3988. <a href="https://doi.org/10.1073/pnas.0530291100" target="_blank">https://doi.org/10.1073/pnas.0530291100</a></div>
+          <div class="ref-item">Singh, S. K., Clarke, I. D., Terasaki, M., et al. (2003). Identification of a cancer stem cell in human brain tumors. <em>Cancer Research, 63</em>(18), 5821–5828. <a href="https://pubmed.ncbi.nlm.nih.gov/14522905" target="_blank">https://pubmed.ncbi.nlm.nih.gov/14522905</a></div>
+          <div class="ref-item">Lapidot, T., Sirard, C., Vormoor, J., Murdoch, B., et al. (1994). A cell initiating human acute myeloid leukaemia after transplantation into SCID mice. <em>Nature, 367</em>(6464), 645–648. <a href="https://doi.org/10.1038/367645a0" target="_blank">https://doi.org/10.1038/367645a0</a></div>
+          <div class="ref-item">Gupta, P. B., Fillmore, C. M., Jiang, G., et al. (2011). Stochastic state transitions give rise to phenotypic equilibrium in populations of cancer cells. <em>Cell, 146</em>(4), 633–644. <a href="https://doi.org/10.1016/j.cell.2011.07.026" target="_blank">https://doi.org/10.1016/j.cell.2011.07.026</a></div>
+          <div class="ref-item">Williams, G. C. (1957). Pleiotropy, natural selection, and the evolution of senescence. <em>Evolution, 11</em>(4), 398–411. <a href="https://doi.org/10.2307/2406060" target="_blank">https://doi.org/10.2307/2406060</a></div>
+          <div class="ref-item">Ungewitter, E., and Scrable, H. (2008). Antagonistic pleiotropy and p53. <em>Mechanisms of Ageing and Development, 129</em>(6), 332–339. <a href="https://doi.org/10.1016/j.mad.2008.03.002" target="_blank">https://doi.org/10.1016/j.mad.2008.03.002</a></div>
+          <div class="ref-item">Medawar, P. B. (1952). <em>An unsolved problem of biology.</em> H. K. Lewis.</div>
+          <div class="ref-item">Austad, S. N., and Hoffman, J. M. (2018). Is antagonistic pleiotropy ubiquitous in aging biology? <em>Evolution, Medicine, and Public Health, 2018</em>(1), 287–294. <a href="https://doi.org/10.1093/emph/eoy033" target="_blank">https://doi.org/10.1093/emph/eoy033</a></div>
+        </div>
+
+        <div class="ch-nav">
+          <button class="ch-btn" onclick="showCh(5,document.querySelectorAll('.nav-btn')[5])">Ch.06 Interrogation Room</button>
+          <button class="ch-btn" onclick="backToCover()">Return to Cover</button>
+        </div>
+      </div>
+    </div>
+
+  </div>
+</div>
+
+<script>
+  const rainEl = document.getElementById('rain');
+  for (let i = 0; i < 48; i++) {
+    const d = document.createElement('div');
+    d.className = 'raindrop';
+    d.style.left = Math.random() * 100 + '%';
+    d.style.height = (Math.random() * 65 + 18) + 'px';
+    d.style.animationDuration = (Math.random() * 1.5 + 0.4) + 's';
+    d.style.animationDelay = (Math.random() * 2.8) + 's';
+    rainEl.appendChild(d);
+  }
+
+  function openSite() {
+    document.getElementById('cover').style.display = 'none';
+    document.getElementById('main-site').style.display = 'block';
+    window.scrollTo(0, 0);
+  }
+
+  function backToCover() {
+    document.getElementById('cover').style.display = 'flex';
+    document.getElementById('main-site').style.display = 'none';
+    window.scrollTo(0, 0);
+  }
+
+  function showCh(i, btn) {
+    document.querySelectorAll('.chapter').forEach(c => c.classList.remove('active'));
+    document.querySelectorAll('.nav-btn').forEach(b => b.classList.remove('active'));
+    document.getElementById('ch-' + i).classList.add('active');
+    if (btn) btn.classList.add('active');
+    window.scrollTo({ top: 0, behavior: 'smooth' });
+  }
+
+  function toggleQA(el) { el.classList.toggle('open'); }
+</script>
+</body>
+</html>
